@@ -1,21 +1,33 @@
 import './App.css';
 import Login from './components/Login'
-import FamilyList from "./components/FamilyList"
+import FamilyList from "./components/FamilyLists"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState, useEffect} from "react"
-
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
-const  [page, setPage]=useState({"component":Login}) 
-useEffect(()=>{
-  if(sessionStorage.getItem("token")){ 
-    setPage({"component":FamilyList})
-   }
-}, [setPage]);
+  const [isDashboardActive, setDashboadActive] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("token") !== null) {
+      setDashboadActive(true);
+    }
+  }, []);
+
   return (
-    <div className="App">
-     { <page.component/>}
-    </div>
+    <>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            {isDashboardActive === true ? (
+              <FamilyList />
+            ) : (
+              <Login setDashboadActive={setDashboadActive} />
+            )}
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    </>
   );
 }
 
